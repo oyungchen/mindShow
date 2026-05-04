@@ -19,7 +19,7 @@ interface Props {
   onSelect?: (nodeId: string) => void;
   isReorderTarget?: boolean;
   onDragMove?: (nodeId: string, x: number, y: number, delta: { dx: number; dy: number }) => void;
-  onDragEnd?: (nodeId: string) => void;
+  onDragEnd?: (nodeId: string, finalDragDelta?: { dx: number; dy: number }) => void;
 }
 
 function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onAddSibling, onDelete, onCopy, onPaste, onDrag, isRoot, isSelected, onSelect, isReorderTarget, onDragMove, onDragEnd }: Props) {
@@ -225,7 +225,7 @@ function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onA
         const isVerticalDrag = Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 20;
         if (isVerticalDrag) {
           console.log('[DragEnd] calling onDragEnd with node.id:', node.id);
-          onDragEnd?.(node.id);
+          onDragEnd?.(node.id, { dx, dy });
         } else {
           console.log('[DragEnd] calling onDrag');
           onDrag?.(node.id, dragPreviewRef.current.x, dragPreviewRef.current.y);

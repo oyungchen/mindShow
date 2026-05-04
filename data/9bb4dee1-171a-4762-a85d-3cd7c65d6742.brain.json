@@ -45,6 +45,10 @@
               "style": {
                 "backgroundColor": "#F6AD55",
                 "color": "#1A202C"
+              },
+              "layoutOffset": {
+                "x": 0,
+                "y": -6
               }
             },
             {
@@ -54,6 +58,10 @@
               "style": {
                 "backgroundColor": "#F6AD55",
                 "color": "#1A202C"
+              },
+              "layoutOffset": {
+                "x": 0,
+                "y": -6
               }
             }
           ],
@@ -61,6 +69,10 @@
             "backgroundColor": "#F6AD55",
             "color": "#1A202C",
             "bold": true
+          },
+          "layoutOffset": {
+            "x": 0,
+            "y": -6
           }
         },
         {
@@ -106,6 +118,10 @@
               "style": {
                 "backgroundColor": "#68D391",
                 "color": "#1A202C"
+              },
+              "layoutOffset": {
+                "x": 0,
+                "y": -7
               }
             }
           ],
@@ -211,5 +227,5 @@
   "layout": "tree",
   "theme": "light",
   "createdAt": "2026-04-25T15:57:45.077Z",
-  "updatedAt": "2026-05-04T07:57:40.084Z"
+  "updatedAt": "2026-05-04T08:01:44.076Z"
 }

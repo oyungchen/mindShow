@@ -574,7 +574,7 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
     onSelectNode?.(node);
   }, [nodeMap, onSelectNode, layout.positions]);
 
-  // 处理节点拖拽 - 支持顺序调整模式和位置拖拽模式
+  // 处理节点拖拽 - 只处理位置拖拽，顺序调整在 handleDragEnd 中处理
   const handleNodeDrag = useCallback((nodeId: string, newX: number, newY: number, dragDelta?: { dx: number; dy: number }) => {
     const node = nodeMap.get(nodeId);
     if (!node) return;
@@ -583,128 +583,105 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
     const currentPos = layout.positions.get(nodeId);
     if (!currentPos) return;
 
-    // 获取父节点ID
-    const rootNodes = getRootNodes(currentFile);
-    const parentId = findNodeParentId(rootNodes, nodeId);
-
-    console.log('[handleNodeDrag] nodeId:', nodeId, 'parentId:', parentId, 'dragDelta:', dragDelta);
-
-    // 如果是根节点（parentId 为 null），只能进行位置拖拽
-    if (parentId === null) {
-      console.log('[handleNodeDrag] root node, position drag only');
+    // 如果是垂直拖拽（顺序调整），不处理位置拖拽
+    if (dragDelta && Math.abs(dragDelta.dy) > Math.abs(dragDelta.dx) && Math.abs(dragDelta.dy) > 20) {
+      // 重置状态
       setIsReorderMode(false);
       setReorderTargetId(null);
       return;
     }
 
-    // 判断是否进入顺序调整模式：垂直拖拽为主，|ΔY| > |ΔX| 且 |ΔY| > 20px
-    const isVerticalDrag = dragDelta && Math.abs(dragDelta.dy) > Math.abs(dragDelta.dx) && Math.abs(dragDelta.dy) > 20;
-    console.log('[handleNodeDrag] isVerticalDrag:', isVerticalDrag);
+    // 位置拖拽模式
+    setIsReorderMode(false);
+    setReorderTargetId(null);
 
-    if (isVerticalDrag) {
-      // 顺序调整模式 - 只更新状态，不保存
-      setIsReorderMode(true);
-      const siblings = findSiblings(rootNodes, nodeId, parentId);
-      console.log('[handleNodeDrag] siblings count:', siblings?.length);
-      if (!siblings) return;
+    // 计算位置偏移
+    const offsetX = newX - currentPos.x;
+    const offsetY = newY - currentPos.y;
 
-      const currentIndex = siblings.findIndex(s => s.id === nodeId);
-      if (currentIndex === -1) return;
+    // 更新所有子节点的位置偏移
+    const clone = structuredClone(currentFile) as MindMap;
 
-      // 找到最近的兄弟节点作为目标
-      const nodeCenterY = newY + currentPos.height / 2;
-      let targetIndex = -1;
-
-      for (let i = 0; i < siblings.length; i++) {
-        if (i === currentIndex) continue;
-        const siblingPos = layout.positions.get(siblings[i].id);
-        if (!siblingPos) continue;
-
-        const siblingCenterY = siblingPos.y + siblingPos.height / 2;
-        const distance = Math.abs(nodeCenterY - siblingCenterY);
-
-        // 如果当前节点中心接近某个兄弟节点
-        if (distance < Math.max(currentPos.height, siblingPos.height) * 0.8) {
-          // 判断拖拽方向：如果新位置在兄弟节点上方，则目标索引是兄弟节点
-          targetIndex = nodeCenterY < siblingCenterY ? i : (i > currentIndex ? i : i);
-          break;
+    // 递归更新节点及其所有子节点的位置偏移
+    function updateNodeOffsets(nodes: MindMapNode[], parentId: string | null): void {
+      for (const n of nodes) {
+        if (n.id === nodeId || (parentId === nodeId)) {
+          // 设置或更新位置偏移
+          n.layoutOffset = n.layoutOffset || { x: 0, y: 0 };
+          n.layoutOffset.x = (n.layoutOffset.x || 0) + offsetX;
+          n.layoutOffset.y = (n.layoutOffset.y || 0) + offsetY;
         }
+        updateNodeOffsets(n.children, n.id);
       }
-
-      setReorderTargetId(targetIndex !== -1 && targetIndex !== currentIndex ? siblings[targetIndex].id : null);
-    } else {
-      // 位置拖拽模式
-      setIsReorderMode(false);
-      setReorderTargetId(null);
-
-      // 计算位置偏移
-      const offsetX = newX - currentPos.x;
-      const offsetY = newY - currentPos.y;
-
-      // 更新所有子节点的位置偏移
-      const clone = structuredClone(currentFile) as MindMap;
-
-      // 递归更新节点及其所有子节点的位置偏移
-      function updateNodeOffsets(nodes: MindMapNode[], parentId: string | null): void {
-        for (const n of nodes) {
-          if (n.id === nodeId || (parentId === nodeId)) {
-            // 设置或更新位置偏移
-            n.layoutOffset = n.layoutOffset || { x: 0, y: 0 };
-            n.layoutOffset.x = (n.layoutOffset.x || 0) + offsetX;
-            n.layoutOffset.y = (n.layoutOffset.y || 0) + offsetY;
-          }
-          updateNodeOffsets(n.children, n.id);
-        }
-      }
-
-      updateNodeOffsets(clone.children, null);
-      saveWithHistory(clone);
     }
+
+    updateNodeOffsets(clone.children, null);
+    saveWithHistory(clone);
   }, [currentFile, layout.positions, nodeMap, saveWithHistory]);
 
   // 处理拖拽结束 - 执行顺序调整
-  const handleDragEnd = useCallback((draggedNodeId: string) => {
-    console.log('[handleDragEnd] called with draggedNodeId:', draggedNodeId);
-    console.log('[handleDragEnd] isReorderMode:', isReorderMode, 'reorderTargetId:', reorderTargetId);
-    if (isReorderMode && reorderTargetId && draggedNodeId) {
-      // 执行顺序调整
-      const rootNodes = getRootNodes(currentFile);
-      const parentId = findNodeParentId(rootNodes, draggedNodeId);
-      console.log('[handleDragEnd] parentId:', parentId);
-      if (parentId !== null) {
-        const siblings = findSiblings(rootNodes, draggedNodeId, parentId);
-        console.log('[handleDragEnd] siblings:', siblings?.length);
-        if (!siblings) {
-          setIsReorderMode(false);
-          setReorderTargetId(null);
-          return;
-        }
-        const currentIndex = siblings.findIndex(s => s.id === draggedNodeId);
-        const targetIndex = siblings.findIndex(s => s.id === reorderTargetId);
-        console.log('[handleDragEnd] currentIndex:', currentIndex, 'targetIndex:', targetIndex);
+  // 注意：不依赖 isReorderMode 状态，因为拖拽结束时状态可能已被重置
+  const handleDragEnd = useCallback((draggedNodeId: string, finalDragDelta?: { dx: number; dy: number }) => {
+    console.log('[handleDragEnd] called with draggedNodeId:', draggedNodeId, 'delta:', finalDragDelta);
 
-        if (currentIndex !== -1 && targetIndex !== -1 && currentIndex !== targetIndex) {
-          const clone = structuredClone(currentFile) as MindMap;
-          const cloneRootNodes = getRootNodes(clone);
-          const cloneParentId = findNodeParentId(cloneRootNodes, draggedNodeId);
-          if (cloneParentId !== null) {
-            const cloneSiblings = findSiblings(cloneRootNodes, draggedNodeId, cloneParentId);
-            if (!cloneSiblings) {
-              setIsReorderMode(false);
-              setReorderTargetId(null);
-              return;
-            }
-            const [removed] = cloneSiblings.splice(currentIndex, 1);
-            cloneSiblings.splice(targetIndex, 0, removed);
-            saveWithHistory(clone);
-            console.log('[handleDragEnd] reorder completed');
-          }
-        }
-      }
-    }
+    // 重置状态
     setIsReorderMode(false);
     setReorderTargetId(null);
-  }, [isReorderMode, reorderTargetId, currentFile, saveWithHistory]);
+
+    if (!finalDragDelta || !draggedNodeId) return;
+
+    // 判断是否是垂直拖拽（顺序调整模式）
+    const isVerticalDrag = Math.abs(finalDragDelta.dy) > Math.abs(finalDragDelta.dx) && Math.abs(finalDragDelta.dy) > 20;
+    console.log('[handleDragEnd] isVerticalDrag:', isVerticalDrag);
+
+    if (!isVerticalDrag) return;
+
+    // 执行顺序调整
+    const rootNodes = getRootNodes(currentFile);
+    const parentId = findNodeParentId(rootNodes, draggedNodeId);
+    console.log('[handleDragEnd] parentId:', parentId);
+
+    if (parentId === null) return; // 根节点不能排序
+
+    const siblings = findSiblings(rootNodes, draggedNodeId, parentId);
+    console.log('[handleDragEnd] siblings count:', siblings?.length);
+    if (!siblings || siblings.length < 2) return; // 需要至少2个节点才能排序
+
+    // 根据拖拽方向决定插入位置
+    // 如果 dy < 0，向上拖，插入到上方节点之前
+    // 如果 dy > 0，向下拖，插入到下方节点之后
+    const currentIndex = siblings.findIndex(s => s.id === draggedNodeId);
+    console.log('[handleDragEnd] currentIndex:', currentIndex);
+
+    if (currentIndex === -1) return;
+
+    let targetIndex: number;
+    if (finalDragDelta.dy < 0) {
+      // 向上拖 - 插入到上一个兄弟节点之前
+      targetIndex = currentIndex > 0 ? currentIndex - 1 : currentIndex;
+    } else {
+      // 向下拖 - 插入到下一个兄弟节点之后
+      targetIndex = currentIndex < siblings.length - 1 ? currentIndex + 1 : currentIndex;
+    }
+
+    console.log('[handleDragEnd] targetIndex:', targetIndex);
+
+    if (currentIndex === targetIndex) return;
+
+    // 执行排序
+    const clone = structuredClone(currentFile) as MindMap;
+    const cloneRootNodes = getRootNodes(clone);
+    const cloneParentId = findNodeParentId(cloneRootNodes, draggedNodeId);
+    if (cloneParentId === null) return;
+
+    const cloneSiblings = findSiblings(cloneRootNodes, draggedNodeId, cloneParentId);
+    if (!cloneSiblings) return;
+
+    const [removed] = cloneSiblings.splice(currentIndex, 1);
+    cloneSiblings.splice(targetIndex, 0, removed);
+    saveWithHistory(clone);
+    console.log('[handleDragEnd] reorder completed');
+  }, [currentFile, saveWithHistory]);
 
   // 更新节点样式
   const handleStyleChange = useCallback((nodeId: string, style: MindMapNode['style']) => {
