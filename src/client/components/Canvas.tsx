@@ -574,8 +574,8 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
     onSelectNode?.(node);
   }, [nodeMap, onSelectNode, layout.positions]);
 
-  // 处理节点拖拽 - 更新节点位置偏移
-  const handleNodeDrag = useCallback((nodeId: string, newX: number, newY: number) => {
+  // 处理节点拖拽 - 支持顺序调整模式和位置拖拽模式
+  const handleNodeDrag = useCallback((nodeId: string, newX: number, newY: number, dragDelta?: { dx: number; dy: number }) => {
     const node = nodeMap.get(nodeId);
     if (!node) return;
 
@@ -583,28 +583,71 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
     const currentPos = layout.positions.get(nodeId);
     if (!currentPos) return;
 
-    // 计算位置偏移
-    const offsetX = newX - currentPos.x;
-    const offsetY = newY - currentPos.y;
+    // 判断是否进入顺序调整模式：垂直拖拽为主，|ΔY| > |ΔX| 且 |ΔY| > 20px
+    const isVerticalDrag = dragDelta && Math.abs(dragDelta.dy) > Math.abs(dragDelta.dx) && Math.abs(dragDelta.dy) > 20;
 
-    // 更新所有子节点的位置偏移
-    const clone = structuredClone(currentFile) as MindMap;
+    // 获取父节点ID
+    const rootNodes = getRootNodes(currentFile);
+    const parentId = findNodeParentId(rootNodes, nodeId);
 
-    // 递归更新节点及其所有子节点的位置偏移
-    function updateNodeOffsets(nodes: MindMapNode[], parentId: string | null): void {
-      for (const n of nodes) {
-        if (n.id === nodeId || (parentId === nodeId)) {
-          // 设置或更新位置偏移
-          n.layoutOffset = n.layoutOffset || { x: 0, y: 0 };
-          n.layoutOffset.x = (n.layoutOffset.x || 0) + offsetX;
-          n.layoutOffset.y = (n.layoutOffset.y || 0) + offsetY;
+    if (isVerticalDrag && parentId !== null) {
+      // 顺序调整模式
+      setIsReorderMode(true);
+      const siblings = findSiblings(rootNodes, nodeId, parentId);
+      if (!siblings) return;
+
+      const currentIndex = siblings.findIndex(s => s.id === nodeId);
+      if (currentIndex === -1) return;
+
+      // 找到最近的兄弟节点作为目标
+      const nodeCenterY = newY + currentPos.height / 2;
+      let targetIndex = -1;
+
+      for (let i = 0; i < siblings.length; i++) {
+        if (i === currentIndex) continue;
+        const siblingPos = layout.positions.get(siblings[i].id);
+        if (!siblingPos) continue;
+
+        const siblingCenterY = siblingPos.y + siblingPos.height / 2;
+        const distance = Math.abs(nodeCenterY - siblingCenterY);
+
+        // 如果当前节点中心接近某个兄弟节点
+        if (distance < Math.max(currentPos.height, siblingPos.height) * 0.8) {
+          // 判断拖拽方向：如果新位置在兄弟节点上方，则目标索引是兄弟节点
+          targetIndex = nodeCenterY < siblingCenterY ? i : (i > currentIndex ? i : i);
+          break;
         }
-        updateNodeOffsets(n.children, n.id);
       }
-    }
 
-    updateNodeOffsets(clone.children, null);
-    saveWithHistory(clone);
+      setReorderTargetId(targetIndex !== -1 && targetIndex !== currentIndex ? siblings[targetIndex].id : null);
+    } else {
+      // 位置拖拽模式
+      setIsReorderMode(false);
+      setReorderTargetId(null);
+
+      // 计算位置偏移
+      const offsetX = newX - currentPos.x;
+      const offsetY = newY - currentPos.y;
+
+      // 更新所有子节点的位置偏移
+      const clone = structuredClone(currentFile) as MindMap;
+
+      // 递归更新节点及其所有子节点的位置偏移
+      function updateNodeOffsets(nodes: MindMapNode[], parentId: string | null): void {
+        for (const n of nodes) {
+          if (n.id === nodeId || (parentId === nodeId)) {
+            // 设置或更新位置偏移
+            n.layoutOffset = n.layoutOffset || { x: 0, y: 0 };
+            n.layoutOffset.x = (n.layoutOffset.x || 0) + offsetX;
+            n.layoutOffset.y = (n.layoutOffset.y || 0) + offsetY;
+          }
+          updateNodeOffsets(n.children, n.id);
+        }
+      }
+
+      updateNodeOffsets(clone.children, null);
+      saveWithHistory(clone);
+    }
   }, [currentFile, layout.positions, nodeMap, saveWithHistory]);
 
   // 更新节点样式
