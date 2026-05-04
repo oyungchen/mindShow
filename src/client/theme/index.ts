@@ -1,4 +1,4 @@
-// 主题配置 - 10套主题（5套暗色系 + 5套亮色系，按颜色深浅区分）
+// 主题配置 - 15套主题（5套暗色系 + 5套亮色系 + 5套彩色系）
 import deep from './deep';
 import mediumDark from './mediumDark';
 import medium from './medium';
@@ -9,8 +9,13 @@ import bright2 from './bright2';
 import bright3 from './bright3';
 import bright4 from './bright4';
 import bright5 from './bright5';
+import sunset from './sunset';
+import ocean from './ocean';
+import forest from './forest';
+import berry from './berry';
+import sakura from './sakura';
 
-// 主题列表（暗色系在前，亮色系在后）
+// 主题列表（暗色系 + 亮色系 + 彩色系）
 export const themes = [
   deep,
   mediumDark,
@@ -22,6 +27,11 @@ export const themes = [
   bright3,
   bright4,
   bright5,
+  sunset,
+  ocean,
+  forest,
+  berry,
+  sakura,
 ];
 
 // 主题Map，方便通过key查找
@@ -36,10 +46,15 @@ export const themeMap: Record<string, typeof deep> = {
   bright3,
   bright4,
   bright5,
+  sunset,
+  ocean,
+  forest,
+  berry,
+  sakura,
 };
 
-// 主题按钮列表
-export const themeList = themes.map(theme => ({
+// 主题按钮列表（深色系删除前三个：deep, mediumDark, medium）
+export const themeList = themes.slice(3).map(theme => ({
   key: theme.key,
   name: theme.name,
   color: theme.colors[0].bg,
@@ -71,3 +86,8 @@ export { default as bright2 } from './bright2';
 export { default as bright3 } from './bright3';
 export { default as bright4 } from './bright4';
 export { default as bright5 } from './bright5';
+export { default as sunset } from './sunset';
+export { default as ocean } from './ocean';
+export { default as forest } from './forest';
+export { default as berry } from './berry';
+export { default as sakura } from './sakura';

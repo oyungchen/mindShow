@@ -11,8 +11,8 @@
           "text": "新节点",
           "children": [],
           "style": {
-            "backgroundColor": "#F687B3",
-            "color": "#1A202C"
+            "backgroundColor": "#D53F8C",
+            "color": "#FFFFFF"
           }
         },
         {
@@ -20,8 +20,8 @@
           "text": "新节点",
           "children": [],
           "style": {
-            "backgroundColor": "#F687B3",
-            "color": "#1A202C"
+            "backgroundColor": "#C05621",
+            "color": "#FFFFFF"
           }
         },
         {
@@ -37,8 +37,8 @@
                   "text": "新节点",
                   "children": [],
                   "style": {
-                    "backgroundColor": "#68D391",
-                    "color": "#1A202C"
+                    "backgroundColor": "#38A169",
+                    "color": "#FFFFFF"
                   }
                 },
                 {
@@ -46,8 +46,8 @@
                   "text": "新节点",
                   "children": [],
                   "style": {
-                    "backgroundColor": "#68D391",
-                    "color": "#1A202C"
+                    "backgroundColor": "#38A169",
+                    "color": "#FFFFFF"
                   }
                 },
                 {
@@ -55,8 +55,8 @@
                   "text": "新节点",
                   "children": [],
                   "style": {
-                    "backgroundColor": "#68D391",
-                    "color": "#1A202C"
+                    "backgroundColor": "#38A169",
+                    "color": "#FFFFFF"
                   }
                 },
                 {
@@ -64,20 +64,20 @@
                   "text": "新节点",
                   "children": [],
                   "style": {
-                    "backgroundColor": "#68D391",
-                    "color": "#1A202C"
+                    "backgroundColor": "#38A169",
+                    "color": "#FFFFFF"
                   }
                 }
               ],
               "style": {
-                "backgroundColor": "#68D391",
-                "color": "#1A202C"
+                "backgroundColor": "#38A169",
+                "color": "#FFFFFF"
               }
             }
           ],
           "style": {
-            "backgroundColor": "#68D391",
-            "color": "#1A202C"
+            "backgroundColor": "#38A169",
+            "color": "#FFFFFF"
           }
         },
         {
@@ -89,8 +89,8 @@
               "text": "新节点",
               "children": [],
               "style": {
-                "backgroundColor": "#63B3ED",
-                "color": "#1A202C"
+                "backgroundColor": "#3182CE",
+                "color": "#FFFFFF"
               }
             },
             {
@@ -98,8 +98,8 @@
               "text": "新节点",
               "children": [],
               "style": {
-                "backgroundColor": "#63B3ED",
-                "color": "#1A202C"
+                "backgroundColor": "#3182CE",
+                "color": "#FFFFFF"
               }
             },
             {
@@ -107,14 +107,14 @@
               "text": "新节点",
               "children": [],
               "style": {
-                "backgroundColor": "#63B3ED",
-                "color": "#1A202C"
+                "backgroundColor": "#3182CE",
+                "color": "#FFFFFF"
               }
             }
           ],
           "style": {
-            "backgroundColor": "#63B3ED",
-            "color": "#1A202C"
+            "backgroundColor": "#3182CE",
+            "color": "#FFFFFF"
           }
         },
         {
@@ -122,8 +122,8 @@
           "text": "新节点",
           "children": [],
           "style": {
-            "backgroundColor": "#B794F4",
-            "color": "#1A202C"
+            "backgroundColor": "#805AD5",
+            "color": "#FFFFFF"
           }
         },
         {
@@ -131,22 +131,22 @@
           "text": "新节点",
           "children": [],
           "style": {
-            "backgroundColor": "#F6AD55",
-            "color": "#1A202C"
+            "backgroundColor": "#D53F8C",
+            "color": "#FFFFFF"
           }
         }
       ],
       "collapsed": false,
       "style": {
-        "backgroundColor": "#ED64A6",
+        "backgroundColor": "#B83280",
         "color": "#FFFFFF",
         "fontSize": 20,
-        "lineColor": "#D53F8C"
+        "lineColor": "#97266D"
       }
     }
   ],
   "layout": "tree",
   "theme": "light",
   "createdAt": "2026-04-25T15:57:45.077Z",
-  "updatedAt": "2026-05-04T08:23:00.757Z"
+  "updatedAt": "2026-05-04T08:55:42.848Z"
 }

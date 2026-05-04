@@ -84,3 +84,5 @@ interface MindMapNode {
 | Delete node | Delete/Backspace |
 | Zoom | Ctrl + scroll |
 | Pan | Drag canvas / Space + drag |
+| Undo | Ctrl + Z |
+| Redo | Ctrl + Shift + Z / Ctrl + Y |
