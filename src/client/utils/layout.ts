@@ -16,13 +16,13 @@ export interface LayoutResult {
 
 // 根据文字计算节点宽度（估算）
 function calculateNodeWidth(text: string, baseWidth: number): number {
-  // 中文字符约 16px 宽，英文字符约 10px 宽
-  // 加上 padding (16px * 2 = 32px) 和安全边距 10px
+  // 中文字符约 18px 宽（更准确的估算，考虑字体差异），英文字符约 10px 宽
+  // 加上 padding (16px * 2 = 32px) 和安全边距 20px
   let textWidth = 0;
   for (const char of text) {
-    textWidth += /[\u4e00-\u9fa5]/.test(char) ? 16 : 10;
+    textWidth += /[\u4e00-\u9fa5]/.test(char) ? 18 : 10;
   }
-  return Math.max(baseWidth, textWidth + 42);
+  return Math.max(baseWidth, textWidth + 52);
 }
 
 // 根据文字计算节点高度

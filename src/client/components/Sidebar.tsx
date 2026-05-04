@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { importFromXMind } from '../utils/import';
+import { importFromXMind, importFromSVG } from '../utils/import';
 
 interface FileInfo {
   id: string;
@@ -42,7 +42,12 @@ function Sidebar({ files, currentFileId, onSelect, onCreate, onDelete, onImport 
     if (!file) return;
 
     try {
-      const mindmap = await importFromXMind(file);
+      let mindmap;
+      if (file.name.endsWith('.svg')) {
+        mindmap = await importFromSVG(file);
+      } else {
+        mindmap = await importFromXMind(file);
+      }
       onImport(mindmap);
     } catch (error) {
       alert('导入失败: ' + (error as Error).message);
@@ -76,7 +81,7 @@ function Sidebar({ files, currentFileId, onSelect, onCreate, onDelete, onImport 
       <input
         ref={fileInputRef}
         type="file"
-        accept=".json,.xmind"
+        accept=".json,.xmind,.svg"
         style={{ display: 'none' }}
         onChange={handleFileChange}
       />

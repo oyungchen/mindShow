@@ -1,5 +1,5 @@
 import { MindMap, MindMapNode } from '../../shared/types/mindmap';
-import { calculateTreeLayout } from './layout';
+import { calculateTreeLayout, NodePosition } from './layout';
 import { getBezierPath } from './path';
 
 // HTML 转义函数，防止 XSS
@@ -14,23 +14,56 @@ function escapeHtml(text: string): string {
   return text.replace(/[&<>"']/g, m => map[m]);
 }
 
-// 导出为 SVG - 使用实际布局和配色
+// Base64 编码（处理 Unicode）
+function base64Encode(str: string): string {
+  return btoa(unescape(encodeURIComponent(str)));
+}
+
+// 导出为 SVG - 使用实际布局和配色，并嵌入脑图数据以便导入
 export function exportToSVG(file: MindMap): string {
-  // 使用与 Canvas 相同的布局计算
-  const rootNode = file.children[0] || { id: file.id, text: file.text, children: [] } as MindMapNode;
-  const layout = calculateTreeLayout(rootNode, {
-    nodeWidth: 120,
-    nodeHeight: 36,
-    horizontalGap: 80,
-    verticalGap: 16,
+  // 使用与 Canvas 相同的布局计算（支持多根节点）
+  const rootNodes = file.children.length > 0 ? file.children : [{ id: file.id, text: file.text, children: [] } as MindMapNode];
+
+  const allPositions = new Map<string, NodePosition>();
+  let maxWidth = 0;
+  let maxHeight = 0;
+  const horizontalGapBetweenRoots = 100;
+
+  let accumulatedWidth = 0;
+  rootNodes.forEach((rootNode, index) => {
+    const rootLayout = calculateTreeLayout(rootNode, {
+      nodeWidth: 120,
+      nodeHeight: 36,
+      horizontalGap: 80,
+      verticalGap: 16,
+    });
+
+    // 水平偏移每个根节点，累加前面所有根节点的宽度
+    const xOffset = accumulatedWidth;
+
+    // 合并位置（带偏移）
+    rootLayout.positions.forEach((pos, id) => {
+      allPositions.set(id, {
+        ...pos,
+        x: pos.x + xOffset,
+        y: pos.y,
+      });
+    });
+
+    maxWidth = Math.max(maxWidth, xOffset + (rootLayout.width || 0));
+    maxHeight = Math.max(maxHeight, rootLayout.height || 0);
+
+    // 更新累积宽度：当前根节点宽度 + 间隔
+    accumulatedWidth += (rootLayout.width || 0) + horizontalGapBetweenRoots;
   });
 
   // 计算 SVG 尺寸
   const padding = 50;
-  const width = Math.max(1200, layout.width + padding * 2);
-  const height = Math.max(800, layout.height + padding * 2);
+  const width = Math.max(1200, maxWidth + padding * 2);
+  const height = Math.max(800, maxHeight + padding * 2);
 
-  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">`;
+  const encoded = base64Encode(JSON.stringify(file));
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" data-mindshow="${encoded}">`;
   svg += `<style>
     .node { font-family: Arial, sans-serif; font-size: 14px; }
     text { dominant-baseline: middle; text-anchor: middle; }
@@ -38,7 +71,7 @@ export function exportToSVG(file: MindMap): string {
   svg += `<rect width="100%" height="100%" fill="#f9fafb"/>`;
 
   // 绘制所有节点
-  layout.positions.forEach((pos, id) => {
+  allPositions.forEach((pos, id) => {
     // 找到对应的节点数据
     const findNode = (nodes: MindMapNode[], targetId: string): MindMapNode | null => {
       for (const node of nodes) {
@@ -65,10 +98,10 @@ export function exportToSVG(file: MindMap): string {
   const drawConnections = (nodes: MindMapNode[]) => {
     nodes.forEach(node => {
       if (node.children && node.children.length > 0 && !node.collapsed) {
-        const parentPos = layout.positions.get(node.id);
+        const parentPos = allPositions.get(node.id);
         if (parentPos) {
           node.children.forEach(child => {
-            const childPos = layout.positions.get(child.id);
+            const childPos = allPositions.get(child.id);
             if (childPos) {
               const startX = parentPos.x + parentPos.width;
               const startY = parentPos.y + parentPos.height / 2;

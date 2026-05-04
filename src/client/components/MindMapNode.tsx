@@ -19,7 +19,7 @@ interface Props {
   onSelect?: (nodeId: string) => void;
   isReorderTarget?: boolean;
   onDragMove?: (nodeId: string, x: number, y: number, delta: { dx: number; dy: number }) => void;
-  onDragEnd?: () => void;
+  onDragEnd?: (nodeId: string) => void;
 }
 
 function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onAddSibling, onDelete, onCopy, onPaste, onDrag, isRoot, isSelected, onSelect, isReorderTarget, onDragMove, onDragEnd }: Props) {
@@ -212,12 +212,13 @@ function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onA
       setIsDragging(false);
 
       if (dragPreview) {
+        // dragPreview.x = nodeX + mouseDx，所以 mouseDx = dragPreview.x - nodeX
         const dx = dragPreview.x - dragStartRef.current.nodeX;
         const dy = dragPreview.y - dragStartRef.current.nodeY;
         // 根据方向判断是否是顺序调整
         const isVerticalDrag = Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 20;
         if (isVerticalDrag) {
-          onDragEnd?.();
+          onDragEnd?.(node.id);
         } else {
           onDrag?.(node.id, dragPreview.x, dragPreview.y);
         }

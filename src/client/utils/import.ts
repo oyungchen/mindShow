@@ -56,6 +56,37 @@ function convertXMindToMindMap(xmindData: any): MindMap {
   };
 }
 
+// Base64 解码（处理 Unicode）
+function base64Decode(str: string): string {
+  const binary = atob(str);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return new TextDecoder('utf-8').decode(bytes);
+}
+
+// SVG 导入
+export async function importFromSVG(file: File): Promise<MindMap> {
+  const text = await file.text();
+
+  // 尝试从 SVG 中提取嵌入的脑图数据
+  const match = text.match(/data-mindshow="([^"]+)"/);
+  if (match) {
+    try {
+      const jsonStr = base64Decode(match[1]);
+      const data = JSON.parse(jsonStr);
+      if (data.id && data.text && data.children !== undefined) {
+        return data as MindMap;
+      }
+    } catch (error) {
+      throw new Error('Failed to parse embedded mind map data: ' + (error as Error).message);
+    }
+  }
+
+  throw new Error('Invalid SVG format: no embedded mind map data found');
+}
+
 // XMind 导出
 export function exportToXMind(file: MindMap): Blob {
   const rootNode = file.children[0] || { id: file.id, text: file.text, children: [] } as MindMapNode;

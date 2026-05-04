@@ -1,0 +1,492 @@
+{
+  "id": "4257c9b4-bc24-45f5-9fa1-bb1bbcbe3016",
+  "text": "北京美天案例打造sop",
+  "children": [
+    {
+      "id": "c1",
+      "text": "精品案例—市场主导",
+      "style": {
+        "backgroundColor": "#ED64A6",
+        "color": "#FFFFFF",
+        "fontSize": 20,
+        "lineColor": "#D53F8C"
+      },
+      "children": [
+        {
+          "id": "c1-1",
+          "text": "发起需求",
+          "style": {
+            "backgroundColor": "#F687B3",
+            "color": "#1A202C"
+          },
+          "children": [
+            {
+              "id": "c1-1-1",
+              "text": "医生 IP｜重点医生",
+              "style": {
+                "backgroundColor": "#F687B3",
+                "color": "#1A202C"
+              },
+              "children": []
+            },
+            {
+              "id": "c1-1-2",
+              "text": "科室运营｜重点项目",
+              "style": {
+                "backgroundColor": "#F687B3",
+                "color": "#1A202C"
+              },
+              "children": []
+            },
+            {
+              "id": "c1-1-3",
+              "text": "电商运营｜平台推广",
+              "style": {
+                "backgroundColor": "#F687B3",
+                "color": "#1A202C"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "c1-2",
+          "text": "招募案例",
+          "style": {
+            "backgroundColor": "#F6AD55",
+            "color": "#1A202C"
+          },
+          "children": [
+            {
+              "id": "c1-2-1",
+              "text": "红人案例",
+              "style": {
+                "backgroundColor": "#F6AD55",
+                "color": "#1A202C"
+              },
+              "children": []
+            },
+            {
+              "id": "c1-2-2",
+              "text": "院内案例",
+              "style": {
+                "backgroundColor": "#F6AD55",
+                "color": "#1A202C"
+              },
+              "children": [],
+              "layoutOffset": {
+                "x": 2,
+                "y": 1
+              }
+            },
+            {
+              "id": "c1-2-3",
+              "text": "客户案例",
+              "style": {
+                "backgroundColor": "#F6AD55",
+                "color": "#1A202C"
+              },
+              "children": [],
+              "layoutOffset": {
+                "x": 7,
+                "y": -2
+              }
+            }
+          ]
+        },
+        {
+          "id": "c1-3",
+          "text": "选择优质案例",
+          "style": {
+            "backgroundColor": "#68D391",
+            "color": "#1A202C"
+          },
+          "children": [
+            {
+              "id": "c1-3-1",
+              "text": "外观",
+              "style": {
+                "backgroundColor": "#68D391",
+                "color": "#1A202C"
+              },
+              "children": []
+            },
+            {
+              "id": "c1-3-2",
+              "text": "配合度",
+              "style": {
+                "backgroundColor": "#68D391",
+                "color": "#1A202C"
+              },
+              "children": []
+            },
+            {
+              "id": "c1-3-3",
+              "text": "表达欲",
+              "style": {
+                "backgroundColor": "#68D391",
+                "color": "#1A202C"
+              },
+              "children": []
+            },
+            {
+              "id": "c1-3-4",
+              "text": "其他附加条件",
+              "style": {
+                "backgroundColor": "#68D391",
+                "color": "#1A202C"
+              },
+              "children": [],
+              "layoutOffset": {
+                "x": 0,
+                "y": -15
+              }
+            }
+          ]
+        },
+        {
+          "id": "c1-4",
+          "text": "敲定方案与时间",
+          "style": {
+            "backgroundColor": "#63B3ED",
+            "color": "#1A202C"
+          },
+          "children": [
+            {
+              "id": "c1-4-1",
+              "text": "医生、案例、药品、科室",
+              "style": {
+                "backgroundColor": "#63B3ED",
+                "color": "#1A202C"
+              },
+              "children": [],
+              "layoutOffset": {
+                "x": -27,
+                "y": 5
+              }
+            }
+          ]
+        },
+        {
+          "id": "c1-5",
+          "text": "案例拍摄脚本",
+          "style": {
+            "backgroundColor": "#B794F4",
+            "color": "#1A202C"
+          },
+          "children": [
+            {
+              "id": "c1-5-1",
+              "text": "基础素材脚本",
+              "style": {
+                "backgroundColor": "#B794F4",
+                "color": "#1A202C"
+              },
+              "children": [
+                {
+                  "id": "148fd33e-2326-48f6-8c15-f942952a39c6",
+                  "text": "新节点",
+                  "children": [],
+                  "style": {
+                    "backgroundColor": "#B794F4",
+                    "color": "#1A202C"
+                  }
+                },
+                {
+                  "id": "a5a68864-3204-47ed-9c43-0c8dc6479628",
+                  "text": "新节点",
+                  "children": [
+                    {
+                      "id": "a7dcba9c-b1d0-450b-9dde-0eef66833691",
+                      "text": "新节点",
+                      "children": [],
+                      "style": {
+                        "backgroundColor": "#B794F4",
+                        "color": "#1A202C"
+                      },
+                      "layoutOffset": {
+                        "x": 2,
+                        "y": 10
+                      }
+                    }
+                  ],
+                  "style": {
+                    "backgroundColor": "#B794F4",
+                    "color": "#1A202C"
+                  },
+                  "layoutOffset": {
+                    "x": 2,
+                    "y": 10
+                  }
+                },
+                {
+                  "id": "b2402baf-c755-4f38-bc22-6fd84919de6a",
+                  "text": "新节点",
+                  "children": [],
+                  "style": {
+                    "backgroundColor": "#B794F4",
+                    "color": "#1A202C"
+                  },
+                  "layoutOffset": {
+                    "x": 0,
+                    "y": 15
+                  }
+                }
+              ],
+              "layoutOffset": {
+                "x": 5,
+                "y": 12
+              }
+            },
+            {
+              "id": "c1-5-2",
+              "text": "医生 IP/其他需求方脚本",
+              "style": {
+                "backgroundColor": "#B794F4",
+                "color": "#1A202C"
+              },
+              "children": [],
+              "layoutOffset": {
+                "x": 7,
+                "y": 34
+              }
+            }
+          ]
+        },
+        {
+          "id": "c1-6",
+          "text": "案例拍摄",
+          "style": {
+            "backgroundColor": "#F687B3",
+            "color": "#1A202C"
+          },
+          "children": []
+        },
+        {
+          "id": "c1-7",
+          "text": "基础产出",
+          "style": {
+            "backgroundColor": "#4FD1C5",
+            "color": "#1A202C"
+          },
+          "children": [
+            {
+              "id": "c1-7-1",
+              "text": "治疗前后医学图",
+              "style": {
+                "backgroundColor": "#4FD1C5",
+                "color": "#1A202C"
+              },
+              "children": [],
+              "layoutOffset": {
+                "x": 39,
+                "y": 0
+              }
+            },
+            {
+              "id": "c1-7-2",
+              "text": "治疗前后医学视频",
+              "style": {
+                "backgroundColor": "#4FD1C5",
+                "color": "#1A202C"
+              },
+              "children": [],
+              "layoutOffset": {
+                "x": 58,
+                "y": 0
+              }
+            },
+            {
+              "id": "c1-7-3",
+              "text": "治疗前后半脸对比",
+              "style": {
+                "backgroundColor": "#4FD1C5",
+                "color": "#1A202C"
+              },
+              "children": [],
+              "layoutOffset": {
+                "x": 35,
+                "y": 1
+              }
+            },
+            {
+              "id": "c1-7-4",
+              "text": "治疗前后生活化图",
+              "style": {
+                "backgroundColor": "#4FD1C5",
+                "color": "#1A202C"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "c1-8",
+          "text": "拓展展营销",
+          "style": {
+            "backgroundColor": "#FC8181",
+            "color": "#1A202C"
+          },
+          "children": [
+            {
+              "id": "c1-8-1",
+              "text": "医生 IP",
+              "style": {
+                "backgroundColor": "#FC8181",
+                "color": "#1A202C"
+              },
+              "children": []
+            },
+            {
+              "id": "c1-8-2",
+              "text": "销售工具",
+              "style": {
+                "backgroundColor": "#FC8181",
+                "color": "#1A202C"
+              },
+              "children": []
+            },
+            {
+              "id": "c1-8-3",
+              "text": "品牌/其他需求",
+              "style": {
+                "backgroundColor": "#FC8181",
+                "color": "#1A202C"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "c1-9",
+          "text": "钉钉审批",
+          "style": {
+            "backgroundColor": "#F6E05E",
+            "color": "#1A202C"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "c2",
+      "text": "效果案例—市场配合",
+      "style": {
+        "backgroundColor": "#ED64A6",
+        "color": "#FFFFFF",
+        "fontSize": 20,
+        "lineColor": "#D53F8C"
+      },
+      "children": [
+        {
+          "id": "c2-1",
+          "text": "发起需求",
+          "style": {
+            "backgroundColor": "#F687B3",
+            "color": "#1A202C"
+          },
+          "children": []
+        },
+        {
+          "id": "c2-2",
+          "text": "招募案例",
+          "style": {
+            "backgroundColor": "#F6AD55",
+            "color": "#1A202C"
+          },
+          "children": []
+        },
+        {
+          "id": "c2-3",
+          "text": "敲定方案",
+          "style": {
+            "backgroundColor": "#68D391",
+            "color": "#1A202C"
+          },
+          "children": []
+        },
+        {
+          "id": "c2-4",
+          "text": "钉钉审批",
+          "style": {
+            "backgroundColor": "#63B3ED",
+            "color": "#1A202C"
+          },
+          "children": []
+        },
+        {
+          "id": "c2-5",
+          "text": "案例拍摄",
+          "style": {
+            "backgroundColor": "#B794F4",
+            "color": "#1A202C"
+          },
+          "children": []
+        },
+        {
+          "id": "c2-6",
+          "text": "基础产出",
+          "style": {
+            "backgroundColor": "#F687B3",
+            "color": "#1A202C"
+          },
+          "children": []
+        }
+      ],
+      "collapsed": false
+    },
+    {
+      "id": "c3",
+      "text": "进院打板—科室主导",
+      "style": {
+        "backgroundColor": "#ED64A6",
+        "color": "#FFFFFF",
+        "fontSize": 20,
+        "lineColor": "#D53F8C"
+      },
+      "children": [
+        {
+          "id": "c3-1",
+          "text": "厂家效果需求",
+          "style": {
+            "backgroundColor": "#F687B3",
+            "color": "#1A202C"
+          },
+          "children": []
+        },
+        {
+          "id": "c3-2",
+          "text": "科室招募案例",
+          "style": {
+            "backgroundColor": "#F6AD55",
+            "color": "#1A202C"
+          },
+          "children": []
+        },
+        {
+          "id": "c3-3",
+          "text": "科室敲定时间",
+          "style": {
+            "backgroundColor": "#68D391",
+            "color": "#1A202C"
+          },
+          "children": []
+        },
+        {
+          "id": "c3-4",
+          "text": "联系拍摄留存",
+          "style": {
+            "backgroundColor": "#63B3ED",
+            "color": "#1A202C"
+          },
+          "children": []
+        }
+      ],
+      "collapsed": false
+    }
+  ],
+  "layout": "tree",
+  "theme": "light",
+  "createdAt": "2026-05-04T06:46:19.065Z",
+  "updatedAt": "2026-05-04T07:43:10.310Z"
+}

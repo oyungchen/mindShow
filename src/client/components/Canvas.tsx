@@ -651,27 +651,27 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
   }, [currentFile, layout.positions, nodeMap, saveWithHistory]);
 
   // 处理拖拽结束 - 执行顺序调整
-  const handleDragEnd = useCallback(() => {
-    if (isReorderMode && reorderTargetId && selectedNodeId) {
+  const handleDragEnd = useCallback((draggedNodeId: string) => {
+    if (isReorderMode && reorderTargetId && draggedNodeId) {
       // 执行顺序调整
       const rootNodes = getRootNodes(currentFile);
-      const parentId = findNodeParentId(rootNodes, selectedNodeId);
+      const parentId = findNodeParentId(rootNodes, draggedNodeId);
       if (parentId !== null) {
-        const siblings = findSiblings(rootNodes, selectedNodeId, parentId);
+        const siblings = findSiblings(rootNodes, draggedNodeId, parentId);
         if (!siblings) {
           setIsReorderMode(false);
           setReorderTargetId(null);
           return;
         }
-        const currentIndex = siblings.findIndex(s => s.id === selectedNodeId);
+        const currentIndex = siblings.findIndex(s => s.id === draggedNodeId);
         const targetIndex = siblings.findIndex(s => s.id === reorderTargetId);
 
         if (currentIndex !== -1 && targetIndex !== -1 && currentIndex !== targetIndex) {
           const clone = structuredClone(currentFile) as MindMap;
           const cloneRootNodes = getRootNodes(clone);
-          const cloneParentId = findNodeParentId(cloneRootNodes, selectedNodeId);
+          const cloneParentId = findNodeParentId(cloneRootNodes, draggedNodeId);
           if (cloneParentId !== null) {
-            const cloneSiblings = findSiblings(cloneRootNodes, selectedNodeId, cloneParentId);
+            const cloneSiblings = findSiblings(cloneRootNodes, draggedNodeId, cloneParentId);
             if (!cloneSiblings) {
               setIsReorderMode(false);
               setReorderTargetId(null);
@@ -686,7 +686,7 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
     }
     setIsReorderMode(false);
     setReorderTargetId(null);
-  }, [isReorderMode, reorderTargetId, selectedNodeId, currentFile, saveWithHistory]);
+  }, [isReorderMode, reorderTargetId, currentFile, saveWithHistory]);
 
   // 更新节点样式
   const handleStyleChange = useCallback((nodeId: string, style: MindMapNode['style']) => {
