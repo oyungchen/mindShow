@@ -214,28 +214,30 @@ function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onA
     };
 
     const handleDragEnd = () => {
-      setIsDragging(false);
+      // 保存最终位置信息
+      const finalDx = dragPreviewRef.current ? dragPreviewRef.current.x - dragStartRef.current.nodeX : 0;
+      const finalDy = dragPreviewRef.current ? dragPreviewRef.current.y - dragStartRef.current.nodeY : 0;
+      const finalX = dragPreviewRef.current?.x ?? 0;
+      const finalY = dragPreviewRef.current?.y ?? 0;
+      const isVertical = Math.abs(finalDy) > Math.abs(finalDx) && Math.abs(finalDy) > 20;
 
-      if (dragPreviewRef.current) {
-        // dragPreview.x = nodeX + mouseDx，所以 mouseDx = dragPreview.x - nodeX
-        const dx = dragPreviewRef.current.x - dragStartRef.current.nodeX;
-        const dy = dragPreviewRef.current.y - dragStartRef.current.nodeY;
-        console.log('[DragEnd] dx:', dx, 'dy:', dy, 'isVertical:', Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 20);
-        // 根据方向判断是否是顺序调整
-        const isVerticalDrag = Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 20;
-        if (isVerticalDrag) {
-          console.log('[DragEnd] calling onDragEnd with node.id:', node.id);
-          onDragEnd?.(node.id, { dx, dy });
-        } else {
-          console.log('[DragEnd] calling onDrag');
-          onDrag?.(node.id, dragPreviewRef.current.x, dragPreviewRef.current.y);
-        }
-      }
+      console.log('[DragEnd] finalDx:', finalDx, 'finalDy:', finalDy, 'isVertical:', isVertical);
 
-      dragPreviewRef.current = null;
-      setDragPreview(null);
+      // 移除监听器
       window.removeEventListener('mousemove', handleDrag);
       window.removeEventListener('mouseup', handleDragEnd);
+
+      // 调用回调（在设置状态之前）
+      if (isVertical) {
+        onDragEnd?.(node.id, { dx: finalDx, dy: finalDy });
+      } else {
+        onDrag?.(node.id, finalX, finalY);
+      }
+
+      // 清除状态
+      dragPreviewRef.current = null;
+      setDragPreview(null);
+      setIsDragging(false);
     };
 
     window.addEventListener('mousemove', handleDrag);
