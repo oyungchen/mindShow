@@ -871,10 +871,12 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
               onDelete={handleDeleteNode}
               onCopy={handleCopy}
               onPaste={handlePaste}
-              onDrag={handleNodeDrag}
+              onDragMove={(id, x, y, delta) => handleNodeDrag(id, x, y, delta)}
               isRoot={isRootNode}
               isSelected={id === selectedNodeId}
               onSelect={handleNodeSelect}
+              isReorderTarget={id === reorderTargetId}
+              onDragEnd={handleDragEnd}
             />
           );
         })}
