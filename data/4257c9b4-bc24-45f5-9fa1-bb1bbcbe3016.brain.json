@@ -301,6 +301,19 @@
               }
             },
             {
+              "id": "c1-7-4",
+              "text": "治疗前后生活化图",
+              "style": {
+                "backgroundColor": "#4FD1C5",
+                "color": "#1A202C"
+              },
+              "children": [],
+              "layoutOffset": {
+                "x": 33,
+                "y": -16
+              }
+            },
+            {
               "id": "c1-7-3",
               "text": "治疗前后半脸对比",
               "style": {
@@ -311,19 +324,6 @@
               "layoutOffset": {
                 "x": 35,
                 "y": 1
-              }
-            },
-            {
-              "id": "c1-7-4",
-              "text": "治疗前后生活化图",
-              "style": {
-                "backgroundColor": "#4FD1C5",
-                "color": "#1A202C"
-              },
-              "children": [],
-              "layoutOffset": {
-                "x": 35,
-                "y": 0
               }
             }
           ]
@@ -563,9 +563,58 @@
             "x": 0,
             "y": 1
           }
+        },
+        {
+          "id": "8dd4681a-3460-462c-962b-16e68183dcd9",
+          "text": "进院打板—科室主导",
+          "style": {
+            "backgroundColor": "#ED64A6",
+            "color": "#FFFFFF",
+            "fontSize": 20,
+            "lineColor": "#D53F8C"
+          },
+          "children": [
+            {
+              "id": "c3-1",
+              "text": "厂家效果需求",
+              "style": {
+                "backgroundColor": "#F687B3",
+                "color": "#1A202C"
+              },
+              "children": []
+            },
+            {
+              "id": "c3-2",
+              "text": "科室招募案例",
+              "style": {
+                "backgroundColor": "#F6AD55",
+                "color": "#1A202C"
+              },
+              "children": []
+            },
+            {
+              "id": "c3-3",
+              "text": "科室敲定时间",
+              "style": {
+                "backgroundColor": "#68D391",
+                "color": "#1A202C"
+              },
+              "children": []
+            },
+            {
+              "id": "c3-4",
+              "text": "联系拍摄留存",
+              "style": {
+                "backgroundColor": "#63B3ED",
+                "color": "#1A202C"
+              },
+              "children": []
+            }
+          ],
+          "collapsed": false
         }
       ],
-      "collapsed": true
+      "collapsed": false
     },
     {
       "id": "c2",
@@ -656,7 +705,7 @@
           }
         }
       ],
-      "collapsed": true,
+      "collapsed": false,
       "layoutOffset": {
         "x": 0,
         "y": 1
@@ -707,108 +756,13 @@
             "color": "#1A202C"
           },
           "children": []
-        },
-        {
-          "id": "b0066ed9-f616-4026-bd7d-8d8b5af2fb65",
-          "text": "效果案例—市场配合",
-          "style": {
-            "backgroundColor": "#ED64A6",
-            "color": "#FFFFFF",
-            "fontSize": 20,
-            "lineColor": "#D53F8C"
-          },
-          "children": [
-            {
-              "id": "c2-1",
-              "text": "发起需求",
-              "style": {
-                "backgroundColor": "#F687B3",
-                "color": "#1A202C"
-              },
-              "children": [],
-              "layoutOffset": {
-                "x": 0,
-                "y": 1
-              }
-            },
-            {
-              "id": "c2-2",
-              "text": "招募案例",
-              "style": {
-                "backgroundColor": "#F6AD55",
-                "color": "#1A202C"
-              },
-              "children": [],
-              "layoutOffset": {
-                "x": 0,
-                "y": 1
-              }
-            },
-            {
-              "id": "c2-3",
-              "text": "敲定方案",
-              "style": {
-                "backgroundColor": "#68D391",
-                "color": "#1A202C"
-              },
-              "children": [],
-              "layoutOffset": {
-                "x": 0,
-                "y": 1
-              }
-            },
-            {
-              "id": "c2-4",
-              "text": "钉钉审批",
-              "style": {
-                "backgroundColor": "#63B3ED",
-                "color": "#1A202C"
-              },
-              "children": [],
-              "layoutOffset": {
-                "x": 0,
-                "y": 1
-              }
-            },
-            {
-              "id": "c2-5",
-              "text": "案例拍摄",
-              "style": {
-                "backgroundColor": "#B794F4",
-                "color": "#1A202C"
-              },
-              "children": [],
-              "layoutOffset": {
-                "x": 0,
-                "y": 1
-              }
-            },
-            {
-              "id": "c2-6",
-              "text": "基础产出",
-              "style": {
-                "backgroundColor": "#F687B3",
-                "color": "#1A202C"
-              },
-              "children": [],
-              "layoutOffset": {
-                "x": 0,
-                "y": 1
-              }
-            }
-          ],
-          "collapsed": true,
-          "layoutOffset": {
-            "x": 0,
-            "y": 1
-          }
         }
       ],
-      "collapsed": true
+      "collapsed": false
     }
   ],
   "layout": "tree",
   "theme": "light",
   "createdAt": "2026-05-04T06:46:19.065Z",
-  "updatedAt": "2026-05-04T08:09:55.144Z"
+  "updatedAt": "2026-05-04T08:11:49.047Z"
 }

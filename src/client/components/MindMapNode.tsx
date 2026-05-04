@@ -13,16 +13,14 @@ interface Props {
   onDelete?: (nodeId: string) => void;
   onCopy?: (nodeId: string) => void;
   onPaste?: (nodeId: string) => void;
-  onDrag?: (nodeId: string, newX: number, newY: number) => void;
   isRoot?: boolean;
   isSelected?: boolean;
   onSelect?: (nodeId: string) => void;
   isReorderTarget?: boolean;
-  onDragMove?: (nodeId: string, x: number, y: number, delta: { dx: number; dy: number }) => void;
   onDragEnd?: (nodeId: string, finalDragDelta?: { dx: number; dy: number }) => void;
 }
 
-function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onAddSibling, onDelete, onCopy, onPaste, onDrag, isRoot, isSelected, onSelect, isReorderTarget, onDragMove, onDragEnd }: Props) {
+function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onAddSibling, onDelete, onCopy, onPaste, isRoot, isSelected, onSelect, isReorderTarget, onDragEnd }: Props) {
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState(node.text);
   const [showContextMenu, setShowContextMenu] = useState(false);
@@ -209,8 +207,6 @@ function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onA
 
       // 更新视觉预览位置
       setDragPreview(dragPreviewRef.current);
-
-      onDragMove?.(node.id, dragStartRef.current.nodeX + dx, dragStartRef.current.nodeY + dy, { dx, dy });
     };
 
     const handleDragEnd = () => {
@@ -228,11 +224,8 @@ function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onA
       window.removeEventListener('mouseup', handleDragEnd);
 
       // 调用回调（在设置状态之前）
-      if (isVertical) {
-        onDragEnd?.(node.id, { dx: finalDx, dy: finalDy });
-      } else {
-        onDrag?.(node.id, finalX, finalY);
-      }
+      // 所有拖拽都使用 onDragEnd 处理，由父组件决定是顺序调整还是位置调整
+      onDragEnd?.(node.id, { dx: finalDx, dy: finalDy });
 
       // 清除状态
       dragPreviewRef.current = null;
@@ -242,7 +235,7 @@ function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onA
 
     window.addEventListener('mousemove', handleDrag);
     window.addEventListener('mouseup', handleDragEnd);
-  }, [editing, position, node.id, onDrag, onDragEnd, onDragMove]);
+  }, [editing, position, node.id, onDragEnd]);
 
   return (
     <div

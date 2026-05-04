@@ -574,51 +574,6 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
     onSelectNode?.(node);
   }, [nodeMap, onSelectNode, layout.positions]);
 
-  // 处理节点拖拽 - 只处理位置拖拽，顺序调整在 handleDragEnd 中处理
-  const handleNodeDrag = useCallback((nodeId: string, newX: number, newY: number, dragDelta?: { dx: number; dy: number }) => {
-    const node = nodeMap.get(nodeId);
-    if (!node) return;
-
-    // 查找当前布局位置
-    const currentPos = layout.positions.get(nodeId);
-    if (!currentPos) return;
-
-    // 如果是垂直拖拽（顺序调整），不处理位置拖拽
-    if (dragDelta && Math.abs(dragDelta.dy) > Math.abs(dragDelta.dx) && Math.abs(dragDelta.dy) > 20) {
-      // 重置状态
-      setIsReorderMode(false);
-      setReorderTargetId(null);
-      return;
-    }
-
-    // 位置拖拽模式
-    setIsReorderMode(false);
-    setReorderTargetId(null);
-
-    // 计算位置偏移
-    const offsetX = newX - currentPos.x;
-    const offsetY = newY - currentPos.y;
-
-    // 更新所有子节点的位置偏移
-    const clone = structuredClone(currentFile) as MindMap;
-
-    // 递归更新节点及其所有子节点的位置偏移
-    function updateNodeOffsets(nodes: MindMapNode[], parentId: string | null): void {
-      for (const n of nodes) {
-        if (n.id === nodeId || (parentId === nodeId)) {
-          // 设置或更新位置偏移
-          n.layoutOffset = n.layoutOffset || { x: 0, y: 0 };
-          n.layoutOffset.x = (n.layoutOffset.x || 0) + offsetX;
-          n.layoutOffset.y = (n.layoutOffset.y || 0) + offsetY;
-        }
-        updateNodeOffsets(n.children, n.id);
-      }
-    }
-
-    updateNodeOffsets(clone.children, null);
-    saveWithHistory(clone);
-  }, [currentFile, layout.positions, nodeMap, saveWithHistory]);
-
   // 处理拖拽结束 - 执行顺序调整
   // 注意：不依赖 isReorderMode 状态，因为拖拽结束时状态可能已被重置
   const handleDragEnd = useCallback((draggedNodeId: string, finalDragDelta?: { dx: number; dy: number }) => {
@@ -644,29 +599,33 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
     if (parentId === null) return; // 根节点不能排序
 
     const siblings = findSiblings(rootNodes, draggedNodeId, parentId);
-    console.log('[handleDragEnd] siblings count:', siblings?.length);
+    console.log('[handleDragEnd] siblings:', siblings?.map(s => s.id), 'count:', siblings?.length);
+    console.log('[handleDragEnd] draggedNodeId:', draggedNodeId, 'is in siblings:', siblings?.some(s => s.id === draggedNodeId));
     if (!siblings || siblings.length < 2) return; // 需要至少2个节点才能排序
 
     // 根据拖拽方向决定插入位置
     // 如果 dy < 0，向上拖，插入到上方节点之前
     // 如果 dy > 0，向下拖，插入到下方节点之后
     const currentIndex = siblings.findIndex(s => s.id === draggedNodeId);
-    console.log('[handleDragEnd] currentIndex:', currentIndex);
+    console.log('[handleDragEnd] currentIndex:', currentIndex, 'dy:', finalDragDelta.dy);
 
     if (currentIndex === -1) return;
 
     let targetIndex: number;
     if (finalDragDelta.dy < 0) {
-      // 向上拖 - 插入到上一个兄弟节点之前
+      // 向上拖 - 插入到上一个兄弟节点之前（即当前位置-1）
       targetIndex = currentIndex > 0 ? currentIndex - 1 : currentIndex;
     } else {
-      // 向下拖 - 插入到下一个兄弟节点之后
+      // 向下拖 - 插入到下一个兄弟节点之后（即当前位置+1）
       targetIndex = currentIndex < siblings.length - 1 ? currentIndex + 1 : currentIndex;
     }
 
-    console.log('[handleDragEnd] targetIndex:', targetIndex);
+    console.log('[handleDragEnd] targetIndex:', targetIndex, 'would reorder from', currentIndex, 'to', targetIndex);
 
-    if (currentIndex === targetIndex) return;
+    if (currentIndex === targetIndex) {
+      console.log('[handleDragEnd] NO REORDER - current === target');
+      return;
+    }
 
     // 执行排序
     const clone = structuredClone(currentFile) as MindMap;
@@ -677,8 +636,11 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
     const cloneSiblings = findSiblings(cloneRootNodes, draggedNodeId, cloneParentId);
     if (!cloneSiblings) return;
 
+    console.log('[handleDragEnd] BEFORE splice cloneSiblings:', cloneSiblings.map(s => s.id));
     const [removed] = cloneSiblings.splice(currentIndex, 1);
     cloneSiblings.splice(targetIndex, 0, removed);
+    console.log('[handleDragEnd] AFTER splice cloneSiblings:', cloneSiblings.map(s => s.id));
+
     saveWithHistory(clone);
     console.log('[handleDragEnd] reorder completed');
   }, [currentFile, saveWithHistory]);
@@ -876,11 +838,9 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
               onDelete={handleDeleteNode}
               onCopy={handleCopy}
               onPaste={handlePaste}
-              onDragMove={(id, x, y, delta) => handleNodeDrag(id, x, y, delta)}
               isRoot={isRootNode}
               isSelected={id === selectedNodeId}
               onSelect={handleNodeSelect}
-              isReorderTarget={id === reorderTargetId}
               onDragEnd={handleDragEnd}
             />
           );
