@@ -650,6 +650,34 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
     }
   }, [currentFile, layout.positions, nodeMap, saveWithHistory]);
 
+  // 处理拖拽结束 - 执行顺序调整
+  const handleDragEnd = useCallback(() => {
+    if (isReorderMode && reorderTargetId && selectedNodeId) {
+      // 执行顺序调整
+      const rootNodes = getRootNodes(currentFile);
+      const parentId = findNodeParentId(rootNodes, selectedNodeId);
+      if (parentId !== null) {
+        const siblings = findSiblings(rootNodes, selectedNodeId, parentId);
+        const currentIndex = siblings.findIndex(s => s.id === selectedNodeId);
+        const targetIndex = siblings.findIndex(s => s.id === reorderTargetId);
+
+        if (currentIndex !== -1 && targetIndex !== -1 && currentIndex !== targetIndex) {
+          const clone = structuredClone(currentFile) as MindMap;
+          const cloneRootNodes = getRootNodes(clone);
+          const cloneParentId = findNodeParentId(cloneRootNodes, selectedNodeId);
+          if (cloneParentId !== null) {
+            const cloneSiblings = findSiblings(cloneRootNodes, selectedNodeId, cloneParentId);
+            const [removed] = cloneSiblings.splice(currentIndex, 1);
+            cloneSiblings.splice(targetIndex, 0, removed);
+            saveWithHistory(clone);
+          }
+        }
+      }
+    }
+    setIsReorderMode(false);
+    setReorderTargetId(null);
+  }, [isReorderMode, reorderTargetId, selectedNodeId, currentFile, saveWithHistory]);
+
   // 更新节点样式
   const handleStyleChange = useCallback((nodeId: string, style: MindMapNode['style']) => {
     // 直接修改 nodeMap 中的节点引用
