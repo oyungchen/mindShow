@@ -56,7 +56,7 @@ function addChildNode(nodes: MindMapNode[], parentId: string, newNode: MindMapNo
 }
 
 // 辅助函数：查找节点的兄弟节点
-function findSiblings(nodes: MindMapNode[], nodeId: string, parentId: string | null): MindMapNode[] {
+function findSiblings(nodes: MindMapNode[], nodeId: string, parentId: string | null): MindMapNode[] | null {
   if (parentId === null) {
     // 根节点层级，nodes 就是根节点数组
     return nodes;
@@ -64,9 +64,9 @@ function findSiblings(nodes: MindMapNode[], nodeId: string, parentId: string | n
   for (const node of nodes) {
     if (node.id === parentId) return node.children;
     const found = findSiblings(node.children, nodeId, parentId);
-    if (found.length > 0) return found;
+    if (found !== null) return found;
   }
-  return [];
+  return null;
 }
 
 // 辅助函数：获取节点的父节点ID
