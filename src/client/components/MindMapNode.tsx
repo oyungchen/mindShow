@@ -17,9 +17,12 @@ interface Props {
   isRoot?: boolean;
   isSelected?: boolean;
   onSelect?: (nodeId: string) => void;
+  isReorderTarget?: boolean;
+  onDragMove?: (nodeId: string, x: number, y: number, delta: { dx: number; dy: number }) => void;
+  onDragEnd?: () => void;
 }
 
-function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onAddSibling, onDelete, onCopy, onPaste, onDrag, isRoot, isSelected, onSelect }: Props) {
+function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onAddSibling, onDelete, onCopy, onPaste, onDrag, isRoot, isSelected, onSelect, isReorderTarget, onDragMove, onDragEnd }: Props) {
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState(node.text);
   const [showContextMenu, setShowContextMenu] = useState(false);
@@ -134,7 +137,11 @@ function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onA
     fontSize: node.style?.fontSize || 14,
     padding: '8px',
     userSelect: 'none',
-    boxShadow: isSelected ? '0 0 0 2px rgba(74, 144, 217, 0.3)' : 'none',
+    boxShadow: isSelected
+      ? '0 0 0 2px rgba(74, 144, 217, 0.3)'
+      : isReorderTarget
+      ? '0 0 0 3px rgba(74, 144, 217, 0.4)'
+      : 'none',
     transition: dragPreview ? 'none' : undefined,
   };
 
@@ -186,25 +193,34 @@ function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onA
       y: e.clientY,
       nodeX: position.x,
       nodeY: position.y,
+      startTime: Date.now(),
     };
 
     const handleDrag = (moveEvent: MouseEvent) => {
       const dx = moveEvent.clientX - dragStartRef.current.x;
       const dy = moveEvent.clientY - dragStartRef.current.y;
 
-      // 只触发预览，不保存
       setDragPreview({
         x: dragStartRef.current.nodeX + dx,
         y: dragStartRef.current.nodeY + dy,
       });
+
+      onDragMove?.(node.id, dragStartRef.current.nodeX + dx, dragStartRef.current.nodeY + dy, { dx, dy });
     };
 
     const handleDragEnd = () => {
       setIsDragging(false);
 
-      // 拖拽结束时才保存
       if (dragPreview) {
-        onDrag?.(node.id, dragPreview.x, dragPreview.y);
+        const dx = dragPreview.x - dragStartRef.current.nodeX;
+        const dy = dragPreview.y - dragStartRef.current.nodeY;
+        // 根据方向判断是否是顺序调整
+        const isVerticalDrag = Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 20;
+        if (isVerticalDrag) {
+          onDragEnd?.();
+        } else {
+          onDrag?.(node.id, dragPreview.x, dragPreview.y);
+        }
       }
 
       setDragPreview(null);
@@ -250,9 +266,9 @@ function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onA
           onClick={e => e.stopPropagation()}
         />
       ) : (
-        <span style={{ whiteSpace: 'nowrap' }}>
+        <span style={{ whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'nowrap', overflow: 'visible' }}>
           {node.icon && <span className="node-icon">{node.icon}</span>}
-          <span className="node-text">{node.text}</span>
+          <span className="node-text" style={{ overflow: 'visible', textOverflow: 'clip', flexShrink: 0 }}>{node.text}</span>
           {node.suffixIcon && <span className="node-icon">{node.suffixIcon}</span>}
           {node.children.length > 0 && (
             <span
