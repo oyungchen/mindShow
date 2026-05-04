@@ -7,150 +7,108 @@
       "text": "新节点",
       "children": [
         {
-          "id": "b7f99268-a795-41d7-b4fc-e4f4b4d0d5ad",
+          "id": "59b6604a-62e1-444e-813c-b918547bfed7",
           "text": "新节点",
-          "children": [
-            {
-              "id": "047bb972-af32-46df-ab78-4d1c0e85ea5b",
-              "text": "新节点",
-              "children": [],
-              "style": {
-                "backgroundColor": "#F687B3",
-                "color": "#1A202C"
-              },
-              "layoutOffset": {
-                "x": 0,
-                "y": -6
-              }
-            },
-            {
-              "id": "d4d7c708-bc74-4080-8c08-1b1bb8ef03f3",
-              "text": "新节点",
-              "children": [],
-              "style": {
-                "backgroundColor": "#F687B3",
-                "color": "#1A202C"
-              },
-              "layoutOffset": {
-                "x": 0,
-                "y": 24
-              }
-            }
-          ],
+          "children": [],
           "style": {
             "backgroundColor": "#F687B3",
-            "color": "#1A202C",
-            "bold": true
-          },
-          "layoutOffset": {
-            "x": 0,
-            "y": -6
+            "color": "#1A202C"
           }
         },
         {
-          "id": "ab82f123-541d-44ac-96e6-d39a8d4f9d99",
+          "id": "71bfa1b5-4c3b-4aaa-8f48-32e65f1312ed",
+          "text": "新节点",
+          "children": [],
+          "style": {
+            "backgroundColor": "#F687B3",
+            "color": "#1A202C"
+          }
+        },
+        {
+          "id": "776f39a4-a6d1-4ff4-8697-1cf80efef006",
           "text": "新节点",
           "children": [
             {
-              "id": "0fa8c343-512a-4439-80e5-8ba098d4df6a",
+              "id": "ee727f3f-897d-44b9-a2a1-c67f6d8ff89f",
               "text": "新节点",
               "children": [
                 {
-                  "id": "c3aa587b-e6dc-4f7a-85c0-702701157270",
+                  "id": "e4a6d74f-a4f4-481c-a223-3f83c9ed187d",
                   "text": "新节点",
                   "children": [],
                   "style": {
-                    "backgroundColor": "#F6AD55",
+                    "backgroundColor": "#68D391",
                     "color": "#1A202C"
-                  },
-                  "layoutOffset": {
-                    "x": 0,
-                    "y": 1
                   }
                 },
                 {
-                  "id": "96f1e317-922b-4f27-a534-c080c3689f88",
+                  "id": "0e5f8119-97b3-4b36-8114-142cb3410045",
                   "text": "新节点",
                   "children": [],
                   "style": {
-                    "backgroundColor": "#F6AD55",
+                    "backgroundColor": "#68D391",
                     "color": "#1A202C"
-                  },
-                  "layoutOffset": {
-                    "x": 103,
-                    "y": 72
+                  }
+                },
+                {
+                  "id": "7fc4e078-b554-42c6-b9fc-f305a0d922a6",
+                  "text": "新节点",
+                  "children": [],
+                  "style": {
+                    "backgroundColor": "#68D391",
+                    "color": "#1A202C"
+                  }
+                },
+                {
+                  "id": "d9b4aeda-b80c-4fa6-8921-1da8806952c7",
+                  "text": "新节点",
+                  "children": [],
+                  "style": {
+                    "backgroundColor": "#68D391",
+                    "color": "#1A202C"
                   }
                 }
               ],
               "style": {
-                "backgroundColor": "#F6AD55",
+                "backgroundColor": "#68D391",
                 "color": "#1A202C"
-              },
-              "layoutOffset": {
-                "x": 0,
-                "y": 1
-              }
-            },
-            {
-              "id": "fa2b13ea-da18-4cc0-a2c2-6c6f91740770",
-              "text": "新节点",
-              "children": [],
-              "style": {
-                "backgroundColor": "#F6AD55",
-                "color": "#1A202C"
-              },
-              "layoutOffset": {
-                "x": -3,
-                "y": -6
               }
             }
           ],
           "style": {
-            "backgroundColor": "#F6AD55",
-            "color": "#1A202C"
-          }
-        },
-        {
-          "id": "8077779e-9aca-4e11-ba73-8a91c0bc400b",
-          "text": "新节点",
-          "children": [],
-          "style": {
             "backgroundColor": "#68D391",
             "color": "#1A202C"
-          },
-          "layoutOffset": {
-            "x": 0,
-            "y": -17
           }
         },
         {
-          "id": "a31201bf-2fe3-4e2f-8e05-c458c1bbf9de",
+          "id": "34c9f456-ebba-4da4-8797-2465e458446e",
           "text": "新节点",
           "children": [
             {
-              "id": "e12b68fc-a711-4e7c-aa46-781808d72281",
+              "id": "49b5699d-d559-4e95-b7b2-f98ea97ad046",
               "text": "新节点",
               "children": [],
               "style": {
                 "backgroundColor": "#63B3ED",
                 "color": "#1A202C"
-              },
-              "layoutOffset": {
-                "x": 48,
-                "y": 0
               }
             },
             {
-              "id": "87805c5f-37d2-4809-9323-49530a6166de",
+              "id": "8c529ab4-2741-4d62-834b-7fac283b05c8",
               "text": "新节点",
               "children": [],
               "style": {
                 "backgroundColor": "#63B3ED",
                 "color": "#1A202C"
-              },
-              "layoutOffset": {
-                "x": 46,
-                "y": 22
+              }
+            },
+            {
+              "id": "245dfdfd-8e8e-462d-83c2-53e8c884bd99",
+              "text": "新节点",
+              "children": [],
+              "style": {
+                "backgroundColor": "#63B3ED",
+                "color": "#1A202C"
               }
             }
           ],
@@ -160,18 +118,21 @@
           }
         },
         {
-          "id": "b32075a9-e250-49c8-9e57-67f980efeb5f",
+          "id": "8fafb62d-b5ff-43f7-9dcd-90867783bc8c",
           "text": "新节点",
           "children": [],
           "style": {
             "backgroundColor": "#B794F4",
-            "color": "#1A202C",
-            "fontSize": 20,
-            "lineColor": "#22543D"
-          },
-          "layoutOffset": {
-            "x": 0,
-            "y": -18
+            "color": "#1A202C"
+          }
+        },
+        {
+          "id": "455c099f-a069-42da-b2b2-75426f9bacce",
+          "text": "新节点",
+          "children": [],
+          "style": {
+            "backgroundColor": "#F6AD55",
+            "color": "#1A202C"
           }
         }
       ],
@@ -187,5 +148,5 @@
   "layout": "tree",
   "theme": "light",
   "createdAt": "2026-04-25T15:57:45.077Z",
-  "updatedAt": "2026-05-04T08:17:45.538Z"
+  "updatedAt": "2026-05-04T08:23:00.757Z"
 }
