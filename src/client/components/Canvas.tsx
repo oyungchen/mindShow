@@ -583,15 +583,22 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
     const currentPos = layout.positions.get(nodeId);
     if (!currentPos) return;
 
-    // 判断是否进入顺序调整模式：垂直拖拽为主，|ΔY| > |ΔX| 且 |ΔY| > 20px
-    const isVerticalDrag = dragDelta && Math.abs(dragDelta.dy) > Math.abs(dragDelta.dx) && Math.abs(dragDelta.dy) > 20;
-
     // 获取父节点ID
     const rootNodes = getRootNodes(currentFile);
     const parentId = findNodeParentId(rootNodes, nodeId);
 
-    if (isVerticalDrag && parentId !== null) {
-      // 顺序调整模式
+    // 如果是根节点（parentId 为 null），只能进行位置拖拽
+    if (parentId === null) {
+      setIsReorderMode(false);
+      setReorderTargetId(null);
+      return;
+    }
+
+    // 判断是否进入顺序调整模式：垂直拖拽为主，|ΔY| > |ΔX| 且 |ΔY| > 20px
+    const isVerticalDrag = dragDelta && Math.abs(dragDelta.dy) > Math.abs(dragDelta.dx) && Math.abs(dragDelta.dy) > 20;
+
+    if (isVerticalDrag) {
+      // 顺序调整模式 - 只更新状态，不保存
       setIsReorderMode(true);
       const siblings = findSiblings(rootNodes, nodeId, parentId);
       if (!siblings) return;

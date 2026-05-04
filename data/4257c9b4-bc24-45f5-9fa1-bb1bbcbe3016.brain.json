@@ -161,8 +161,8 @@
               },
               "children": [],
               "layoutOffset": {
-                "x": -27,
-                "y": 5
+                "x": -32,
+                "y": 1
               }
             }
           ]
@@ -190,6 +190,10 @@
                   "style": {
                     "backgroundColor": "#B794F4",
                     "color": "#1A202C"
+                  },
+                  "layoutOffset": {
+                    "x": -2,
+                    "y": -3
                   }
                 },
                 {
@@ -215,8 +219,8 @@
                     "color": "#1A202C"
                   },
                   "layoutOffset": {
-                    "x": 2,
-                    "y": 10
+                    "x": 0,
+                    "y": 7
                   }
                 },
                 {
@@ -228,14 +232,14 @@
                     "color": "#1A202C"
                   },
                   "layoutOffset": {
-                    "x": 0,
-                    "y": 15
+                    "x": -2,
+                    "y": -1
                   }
                 }
               ],
               "layoutOffset": {
-                "x": 5,
-                "y": 12
+                "x": 3,
+                "y": 9
               }
             },
             {
@@ -248,7 +252,7 @@
               "children": [],
               "layoutOffset": {
                 "x": 7,
-                "y": 34
+                "y": -5
               }
             }
           ]
@@ -279,7 +283,7 @@
               },
               "children": [],
               "layoutOffset": {
-                "x": 39,
+                "x": 32,
                 "y": 0
               }
             },
@@ -292,7 +296,7 @@
               },
               "children": [],
               "layoutOffset": {
-                "x": 58,
+                "x": 32,
                 "y": 0
               }
             },
@@ -316,7 +320,11 @@
                 "backgroundColor": "#4FD1C5",
                 "color": "#1A202C"
               },
-              "children": []
+              "children": [],
+              "layoutOffset": {
+                "x": 35,
+                "y": 0
+              }
             }
           ]
         },
@@ -488,5 +496,5 @@
   "layout": "tree",
   "theme": "light",
   "createdAt": "2026-05-04T06:46:19.065Z",
-  "updatedAt": "2026-05-04T07:43:10.310Z"
+  "updatedAt": "2026-05-04T07:47:55.858Z"
 }
