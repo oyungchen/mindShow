@@ -55,6 +55,30 @@ function addChildNode(nodes: MindMapNode[], parentId: string, newNode: MindMapNo
   return false;
 }
 
+// 辅助函数：查找节点的兄弟节点
+function findSiblings(nodes: MindMapNode[], nodeId: string, parentId: string | null): MindMapNode[] {
+  if (parentId === null) {
+    // 根节点层级，nodes 就是根节点数组
+    return nodes;
+  }
+  for (const node of nodes) {
+    if (node.id === parentId) return node.children;
+    const found = findSiblings(node.children, nodeId, parentId);
+    if (found.length > 0) return found;
+  }
+  return [];
+}
+
+// 辅助函数：获取节点的父节点ID
+function findNodeParentId(nodes: MindMapNode[], nodeId: string, parentId: string | null = null): string | null {
+  for (const node of nodes) {
+    if (node.id === nodeId) return parentId;
+    const found = findNodeParentId(node.children, nodeId, node.id);
+    if (found !== null) return found;
+  }
+  return null;
+}
+
 // 辅助函数：将 MindMap 转换为 MindMapNode（安全转换）
 function mindMapToNode(mindmap: MindMap): MindMapNode {
   return {
@@ -202,23 +226,51 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
     onSave(content);
   }, [onSave]);
 
-  // 使用根节点或整个文件作为布局根
-  const rootNode = useMemo(() => {
-    return currentFile.children.length > 0 ? currentFile.children[0] : {
+  // 使用根节点数组或整个文件作为布局根（支持多根节点）
+  const rootNodes = useMemo(() => {
+    return currentFile.children.length > 0 ? currentFile.children : [{
       id: currentFile.id,
       text: currentFile.text,
       children: [],
-    } as MindMapNode;
+    } as MindMapNode];
   }, [currentFile]);
 
   const layout = useMemo(() => {
-    return calculateTreeLayout(rootNode, {
-      nodeWidth: 120,
-      nodeHeight: 36,
-      horizontalGap: 80,
-      verticalGap: 16,
+    const allPositions = new Map<string, NodePosition>();
+    let maxWidth = 0;
+    let maxHeight = 0;
+    const horizontalGapBetweenRoots = 100;
+
+    let accumulatedWidth = 0;
+    rootNodes.forEach((rootNode, index) => {
+      const rootLayout = calculateTreeLayout(rootNode, {
+        nodeWidth: 120,
+        nodeHeight: 36,
+        horizontalGap: 80,
+        verticalGap: 16,
+      });
+
+      // 水平偏移每个根节点，累加前面所有根节点的宽度
+      const xOffset = accumulatedWidth;
+
+      // 合并位置（带偏移）
+      rootLayout.positions.forEach((pos, id) => {
+        allPositions.set(id, {
+          ...pos,
+          x: pos.x + xOffset,
+          y: pos.y,
+        });
+      });
+
+      maxWidth = Math.max(maxWidth, xOffset + (rootLayout.width || 0));
+      maxHeight = Math.max(maxHeight, rootLayout.height || 0);
+
+      // 更新累积宽度：当前根节点宽度 + 间隔
+      accumulatedWidth += (rootLayout.width || 0) + horizontalGapBetweenRoots;
     });
-  }, [rootNode]);
+
+    return { positions: allPositions, width: maxWidth, height: maxHeight };
+  }, [rootNodes]);
 
   // 方向键导航处理函数
   const handleArrowKey = useCallback((direction: 'up' | 'down' | 'left' | 'right') => {
@@ -722,7 +774,10 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
         ))}
       </div>
 
-      <svg style={{ position: 'absolute', width: '100%', height: '100%', pointerEvents: 'none', ...transformStyle }}>
+      <svg
+        className="connections-svg"
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', overflow: 'visible', ...transformStyle }}
+      >
         {connections}
       </svg>
       <div style={transformStyle}>
