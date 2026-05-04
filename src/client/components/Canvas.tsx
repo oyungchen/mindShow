@@ -658,6 +658,11 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
       const parentId = findNodeParentId(rootNodes, selectedNodeId);
       if (parentId !== null) {
         const siblings = findSiblings(rootNodes, selectedNodeId, parentId);
+        if (!siblings) {
+          setIsReorderMode(false);
+          setReorderTargetId(null);
+          return;
+        }
         const currentIndex = siblings.findIndex(s => s.id === selectedNodeId);
         const targetIndex = siblings.findIndex(s => s.id === reorderTargetId);
 
@@ -667,6 +672,11 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
           const cloneParentId = findNodeParentId(cloneRootNodes, selectedNodeId);
           if (cloneParentId !== null) {
             const cloneSiblings = findSiblings(cloneRootNodes, selectedNodeId, cloneParentId);
+            if (!cloneSiblings) {
+              setIsReorderMode(false);
+              setReorderTargetId(null);
+              return;
+            }
             const [removed] = cloneSiblings.splice(currentIndex, 1);
             cloneSiblings.splice(targetIndex, 0, removed);
             saveWithHistory(clone);

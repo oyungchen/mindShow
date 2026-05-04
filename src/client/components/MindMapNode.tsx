@@ -30,7 +30,7 @@ function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onA
   const [isDragging, setIsDragging] = useState(false);
   const [dragPreview, setDragPreview] = useState<{ x: number; y: number } | null>(null);
   const nodeRef = useRef<HTMLDivElement>(null);
-  const dragStartRef = useRef({ x: 0, y: 0, nodeX: 0, nodeY: 0 });
+  const dragStartRef = useRef<{ x: number; y: number; nodeX: number; nodeY: number; startTime: number }>({ x: 0, y: 0, nodeX: 0, nodeY: 0, startTime: 0 });
 
   // 同步外部 node.text 变化到本地状态
   useEffect(() => {
