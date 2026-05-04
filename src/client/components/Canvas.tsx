@@ -108,6 +108,8 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [selectedNodePos, setSelectedNodePos] = useState<{x: number, y: number} | null>(null);
+  const [reorderTargetId, setReorderTargetId] = useState<string | null>(null);
+  const [isReorderMode, setIsReorderMode] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // 主题状态
