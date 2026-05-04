@@ -31,6 +31,7 @@ function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onA
   const [dragPreview, setDragPreview] = useState<{ x: number; y: number } | null>(null);
   const nodeRef = useRef<HTMLDivElement>(null);
   const dragStartRef = useRef<{ x: number; y: number; nodeX: number; nodeY: number; startTime: number }>({ x: 0, y: 0, nodeX: 0, nodeY: 0, startTime: 0 });
+  const dragPreviewRef = useRef<{ x: number; y: number } | null>(null);
 
   // 同步外部 node.text 变化到本地状态
   useEffect(() => {
@@ -195,15 +196,19 @@ function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onA
       nodeY: position.y,
       startTime: Date.now(),
     };
+    dragPreviewRef.current = null;
 
     const handleDrag = (moveEvent: MouseEvent) => {
       const dx = moveEvent.clientX - dragStartRef.current.x;
       const dy = moveEvent.clientY - dragStartRef.current.y;
 
-      setDragPreview({
+      dragPreviewRef.current = {
         x: dragStartRef.current.nodeX + dx,
         y: dragStartRef.current.nodeY + dy,
-      });
+      };
+
+      // 更新视觉预览位置
+      setDragPreview(dragPreviewRef.current);
 
       onDragMove?.(node.id, dragStartRef.current.nodeX + dx, dragStartRef.current.nodeY + dy, { dx, dy });
     };
@@ -211,19 +216,23 @@ function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onA
     const handleDragEnd = () => {
       setIsDragging(false);
 
-      if (dragPreview) {
+      if (dragPreviewRef.current) {
         // dragPreview.x = nodeX + mouseDx，所以 mouseDx = dragPreview.x - nodeX
-        const dx = dragPreview.x - dragStartRef.current.nodeX;
-        const dy = dragPreview.y - dragStartRef.current.nodeY;
+        const dx = dragPreviewRef.current.x - dragStartRef.current.nodeX;
+        const dy = dragPreviewRef.current.y - dragStartRef.current.nodeY;
+        console.log('[DragEnd] dx:', dx, 'dy:', dy, 'isVertical:', Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 20);
         // 根据方向判断是否是顺序调整
         const isVerticalDrag = Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 20;
         if (isVerticalDrag) {
+          console.log('[DragEnd] calling onDragEnd with node.id:', node.id);
           onDragEnd?.(node.id);
         } else {
-          onDrag?.(node.id, dragPreview.x, dragPreview.y);
+          console.log('[DragEnd] calling onDrag');
+          onDrag?.(node.id, dragPreviewRef.current.x, dragPreviewRef.current.y);
         }
       }
 
+      dragPreviewRef.current = null;
       setDragPreview(null);
       window.removeEventListener('mousemove', handleDrag);
       window.removeEventListener('mouseup', handleDragEnd);
@@ -231,7 +240,7 @@ function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onA
 
     window.addEventListener('mousemove', handleDrag);
     window.addEventListener('mouseup', handleDragEnd);
-  }, [editing, position, node.id, onDrag, dragPreview]);
+  }, [editing, position, node.id, onDrag, onDragEnd, onDragMove]);
 
   return (
     <div

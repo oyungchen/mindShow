@@ -587,8 +587,11 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
     const rootNodes = getRootNodes(currentFile);
     const parentId = findNodeParentId(rootNodes, nodeId);
 
+    console.log('[handleNodeDrag] nodeId:', nodeId, 'parentId:', parentId, 'dragDelta:', dragDelta);
+
     // 如果是根节点（parentId 为 null），只能进行位置拖拽
     if (parentId === null) {
+      console.log('[handleNodeDrag] root node, position drag only');
       setIsReorderMode(false);
       setReorderTargetId(null);
       return;
@@ -596,11 +599,13 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
 
     // 判断是否进入顺序调整模式：垂直拖拽为主，|ΔY| > |ΔX| 且 |ΔY| > 20px
     const isVerticalDrag = dragDelta && Math.abs(dragDelta.dy) > Math.abs(dragDelta.dx) && Math.abs(dragDelta.dy) > 20;
+    console.log('[handleNodeDrag] isVerticalDrag:', isVerticalDrag);
 
     if (isVerticalDrag) {
       // 顺序调整模式 - 只更新状态，不保存
       setIsReorderMode(true);
       const siblings = findSiblings(rootNodes, nodeId, parentId);
+      console.log('[handleNodeDrag] siblings count:', siblings?.length);
       if (!siblings) return;
 
       const currentIndex = siblings.findIndex(s => s.id === nodeId);
@@ -659,12 +664,16 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
 
   // 处理拖拽结束 - 执行顺序调整
   const handleDragEnd = useCallback((draggedNodeId: string) => {
+    console.log('[handleDragEnd] called with draggedNodeId:', draggedNodeId);
+    console.log('[handleDragEnd] isReorderMode:', isReorderMode, 'reorderTargetId:', reorderTargetId);
     if (isReorderMode && reorderTargetId && draggedNodeId) {
       // 执行顺序调整
       const rootNodes = getRootNodes(currentFile);
       const parentId = findNodeParentId(rootNodes, draggedNodeId);
+      console.log('[handleDragEnd] parentId:', parentId);
       if (parentId !== null) {
         const siblings = findSiblings(rootNodes, draggedNodeId, parentId);
+        console.log('[handleDragEnd] siblings:', siblings?.length);
         if (!siblings) {
           setIsReorderMode(false);
           setReorderTargetId(null);
@@ -672,6 +681,7 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
         }
         const currentIndex = siblings.findIndex(s => s.id === draggedNodeId);
         const targetIndex = siblings.findIndex(s => s.id === reorderTargetId);
+        console.log('[handleDragEnd] currentIndex:', currentIndex, 'targetIndex:', targetIndex);
 
         if (currentIndex !== -1 && targetIndex !== -1 && currentIndex !== targetIndex) {
           const clone = structuredClone(currentFile) as MindMap;
@@ -687,6 +697,7 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
             const [removed] = cloneSiblings.splice(currentIndex, 1);
             cloneSiblings.splice(targetIndex, 0, removed);
             saveWithHistory(clone);
+            console.log('[handleDragEnd] reorder completed');
           }
         }
       }
