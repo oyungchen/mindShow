@@ -108,6 +108,7 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [selectedNodePos, setSelectedNodePos] = useState<{x: number, y: number} | null>(null);
+  const [showContextMenu, setShowContextMenu] = useState(false);
   const [reorderTargetId, setReorderTargetId] = useState<string | null>(null);
   const [isReorderMode, setIsReorderMode] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -563,13 +564,22 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
     saveWithHistory(clone);
   }, [currentFile, clipboard, saveWithHistory]);
 
-  // 选择节点
+  // 选择节点（仅左键单击时）
   const handleNodeSelect = useCallback((nodeId: string) => {
     setSelectedNodeId(nodeId);
+    // 不再设置 selectedNodePos，避免左键点击时显示菜单
+    const node = nodeMap.get(nodeId) || null;
+    onSelectNode?.(node);
+  }, [nodeMap, onSelectNode]);
+
+  // 右键菜单处理 - 显示操作面板
+  const handleNodeContextMenu = useCallback((nodeId: string, x: number, y: number) => {
     const pos = layout.positions.get(nodeId);
     if (pos) {
       setSelectedNodePos({ x: pos.x + pos.width, y: pos.y + pos.height });
     }
+    setSelectedNodeId(nodeId);
+    setShowContextMenu(true);
     const node = nodeMap.get(nodeId) || null;
     onSelectNode?.(node);
   }, [nodeMap, onSelectNode, layout.positions]);
@@ -736,12 +746,13 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
   // 点击画布空白区域取消选择
   const handleCanvasClick = useCallback(() => {
     setSelectedNodeId(null);
+    setShowContextMenu(false);
     onSelectNode?.(null);
   }, [onSelectNode]);
 
   // 渲染操作面板
   const renderActionPanel = () => {
-    if (!selectedNodeId || !selectedNodePos) return null;
+    if (!showContextMenu || !selectedNodeId || !selectedNodePos) return null;
     // 计算节点右下角在画布上的实际位置（考虑缩放和偏移，以及顶部主题栏40px）
     const x = selectedNodePos.x * scale + offset.x + 8;
     const y = selectedNodePos.y * scale + offset.y + 40 + 8;
@@ -838,6 +849,7 @@ function Canvas({ file, onSave, onSelectNode }: CanvasProps) {
               onDelete={handleDeleteNode}
               onCopy={handleCopy}
               onPaste={handlePaste}
+              onContextMenu={handleNodeContextMenu}
               isRoot={isRootNode}
               isSelected={id === selectedNodeId}
               onSelect={handleNodeSelect}

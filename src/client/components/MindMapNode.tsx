@@ -13,6 +13,7 @@ interface Props {
   onDelete?: (nodeId: string) => void;
   onCopy?: (nodeId: string) => void;
   onPaste?: (nodeId: string) => void;
+  onContextMenu?: (nodeId: string, x: number, y: number) => void;
   isRoot?: boolean;
   isSelected?: boolean;
   onSelect?: (nodeId: string) => void;
@@ -20,11 +21,9 @@ interface Props {
   onDragEnd?: (nodeId: string, finalDragDelta?: { dx: number; dy: number }) => void;
 }
 
-function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onAddSibling, onDelete, onCopy, onPaste, isRoot, isSelected, onSelect, isReorderTarget, onDragEnd }: Props) {
+function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onAddSibling, onDelete, onCopy, onPaste, onContextMenu, isRoot, isSelected, onSelect, isReorderTarget, onDragEnd }: Props) {
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState(node.text);
-  const [showContextMenu, setShowContextMenu] = useState(false);
-  const [contextMenuPos, setContextMenuPos] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragPreview, setDragPreview] = useState<{ x: number; y: number } | null>(null);
   const nodeRef = useRef<HTMLDivElement>(null);
@@ -78,18 +77,8 @@ function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onA
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setContextMenuPos({ x: e.clientX, y: e.clientY });
-    setShowContextMenu(true);
+    onContextMenu?.(node.id, e.clientX, e.clientY);
   };
-
-  // 点击其他地方关闭菜单
-  useEffect(() => {
-    const handleClick = () => setShowContextMenu(false);
-    if (showContextMenu) {
-      window.addEventListener('click', handleClick);
-      return () => window.removeEventListener('click', handleClick);
-    }
-  }, [showContextMenu]);
 
   const handleDoubleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -150,29 +139,6 @@ function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onA
         transform: `translate(${dragPreview.x - position.x}px, ${dragPreview.y - position.y}px)`,
       }
     : {};
-
-  const contextMenuStyle: React.CSSProperties = {
-    position: 'fixed',
-    left: contextMenuPos.x,
-    top: contextMenuPos.y,
-    background: '#fff',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-    zIndex: 1000,
-    minWidth: '120px',
-  };
-
-  const menuItemStyle: React.CSSProperties = {
-    padding: '8px 12px',
-    cursor: 'pointer',
-    fontSize: '14px',
-  };
-
-  const handleMenuItemClick = (action: () => void) => {
-    action();
-    setShowContextMenu(false);
-  };
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -284,45 +250,6 @@ function MindMapNode({ node, position, onEdit, onToggleCollapse, onAddChild, onA
             </span>
           )}
         </span>
-      )}
-
-      {showContextMenu && (
-        <div style={contextMenuStyle} onClick={e => e.stopPropagation()}>
-          <div
-            style={menuItemStyle}
-            onClick={() => handleMenuItemClick(() => onCopy?.(node.id))}
-            onMouseEnter={e => (e.currentTarget.style.background = '#f0f0f0')}
-            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-          >
-            复制
-          </div>
-          <div
-            style={menuItemStyle}
-            onClick={() => handleMenuItemClick(() => onPaste?.(node.id))}
-            onMouseEnter={e => (e.currentTarget.style.background = '#f0f0f0')}
-            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-          >
-            粘贴
-          </div>
-          <div
-            style={menuItemStyle}
-            onClick={() => handleMenuItemClick(() => onAddChild(node.id))}
-            onMouseEnter={e => (e.currentTarget.style.background = '#f0f0f0')}
-            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-          >
-            添加子节点
-          </div>
-          {!isRoot && (
-            <div
-              style={{ ...menuItemStyle, color: '#ff4d4f' }}
-              onClick={() => handleMenuItemClick(() => onDelete?.(node.id))}
-              onMouseEnter={e => (e.currentTarget.style.background = '#fff1f0')}
-              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-            >
-              删除
-            </div>
-          )}
-        </div>
       )}
     </div>
   );
